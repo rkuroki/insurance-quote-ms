@@ -1,2 +1,89 @@
-# insurance-quote-ms
-Insurance Quote Microservice
+### TODO list
+
+- [x] criar projeto pelo Spring Initializr
+- [ ] configurar projeto
+    - [x] postgresql, h2 (component tests)
+    - [x] kafka
+    - [ ] rest mock server (`catalog-ms`)
+        - [ ] criar 'small nodejs app'?
+        - [ ] remover mocks (package `xxx`)
+    - [ ] kafka pub-sub "mock client" (`insurance-policy-ms`)
+        - [ ] criar 'small nodejs app'?
+        - [ ] remover mocks (package `xxx`)
+    - [x] docker-compose
+    - [ ] Dockerfile
+- [ ] criar entidade InsuranceQuote (persistencia simples)
+    - [x] entity, service, controller, dtos, mappers
+    - [ ] criar tests
+        - [ ] units:
+            - [ ] entity
+            - [x] service
+            - [x] mappers
+        - [ ] integration:
+            - [X] controller
+            - [ ] service (criar mais cenarios) ***
+        - [x] integration (container)
+            - [x] controller
+- [ ] adicionar validações da entidade
+    - [ ] fetch Product e Offer (`catalog-ms`)
+        - [ ] criar um controller temporario para mockar o `catalog-ms` (package `xxx`)
+            - [x] criar .json com massa
+            - [ ] fix: fazer funcionar no testcontainer
+        - [x] criar serviços de integração externa
+        - [ ] configurar mock server ***
+            - [ ] utilizar o mesmo .json já criado
+            - [ ] remover controller mockado
+            - [ ] trocar config URLs usadas nos servicos
+        - [ ] criar contract tests (integration container) *
+    - [x] criar validador de regras
+        - [x] criar chain de validadores de regras
+        - [x] criar composite para percorrer o chain
+        - [x] criar exception de validações de regras
+    - [x] configurar error responses, com mensagem e status code de acordo com o tipo de erro
+        - [x] validar nos testes de controller
+- [ ] notificar recebimento da cotação (Kafka)
+    - [x] criar publisher `insurance-quote-received`
+        - [x] usar publisher no service, publica msg: `{insuranceQuoteId}`
+    - [x] criar consumer MOCK `insurance-quote-received` (mock do `insurance-policy-ms`)
+        - [x] consome msg, gera um policy id aleatorio, coloca no topico `insurance-policy-created`:
+          `{insuranceQuoteId,insurancePolicyId}`
+    - [x] criar consumer `insurance-policy-created`
+        - [x] chamar service para salvar o `insurancePolicyId`
+    - [x] configurar Kafta:
+        - [x] docker-compose.yaml
+        - [x] application.yaml
+        - [x] testcontainer
+    - [ ] criar tests
+- [ ] configurar Cache service que consomem o catalog-ms
+    - [x] usar cache simples do spring
+    - [ ] trocar para cache distribuido: Redis (optional)
+        - [ ] config:
+            - [ ] testcontainer
+            - [ ] applications yaml
+            - [ ] docker-compose
+
+- [ ] escrever README.md
+    - [ ] descricao
+    - [ ] tecnologias utilizadas
+    - [ ] abordagens
+        - [ ] objetivo do projeto
+        - [ ] abordagens
+            - [ ] implmentacao simples de chain de validadores
+            - [ ] adição do campo 'status' para identificar erros (principalmente de mensageria)
+    - [ ] instrucoes
+        - [ ] build
+        - [ ] bootRun (com docker-compose)
+        - [ ] massas de test (jsons samples)
+            - [ ] lista dos Products e Offers disponiveis no mock
+            - [ ] exemplos de InsuranteQuote Requests:
+                - [ ] sucesso
+                - [ ] erro por campo do payload invalido (400)
+                - [ ] erro por validação de regra (422)
+    - [ ] diagrama da arquitetura
+    - [ ] diagrama de sequencia do fluxo principal (PlantUML)
+    - [ ] arvore de diretorios e principais arquivos
+    - [ ] descrever testes
+    - [ ] adicionar observacoes gerais
+- [ ] configurar CI/CD
+- [ ] adicionar "logs, traces e metrics" distribuido
+- [ ] teste de carga
