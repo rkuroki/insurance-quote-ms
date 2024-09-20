@@ -1,10 +1,16 @@
 
+___
+
 ```
 docker-compose up -d
 ./gradlew bootRun
 ```
 
-```
+
+___
+``` bash
+###
+# Registrando Cotação (Sucesso):
 curl --request POST \
   --url http://localhost:8080/insurance-quote \
   --header 'Content-Type: application/json' \
@@ -35,12 +41,49 @@ curl --request POST \
 	}
 }'
 
+###
+# Buscando Cotação salva por Id:
 curl --request GET \
   --url http://localhost:8080/insurance-quote/1
+
+###
+# Buscando todas Cotações salvas:
+curl --request GET \
+  --url http://localhost:8080/insurance-quote/all
+
+###
+# Registrando Cotação (Erro de payload invalido):
+curl --request POST \
+  --url http://localhost:8080/insurance-quote \
+  --header 'Content-Type: application/json' \
+  --data '{ }'
+
+###
+# Registrando Cotação (Erro de regra de validação):
+curl --request POST \
+  --url http://localhost:8080/insurance-quote \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"product_id": "1b2da7cc-b367-4196-8a78-9cfeec21f587",
+	"offer_id": "adc56d77-348c-4bf0-908f-22d402ee715c",
+	"total_monthly_premium_amount": 75.25,
+	"total_coverage_amount": 825000.00,
+	"coverages": {
+		"Incêndio": 250000.00
+	},
+	"assistances": [
+		"Encanador"
+	]
+}'
 ```
 
-The controller testcontainer: [InsuranceQuoteControllerContainerTest.java](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/test/java/com/insurance/insurancequote/controller/InsuranceQuoteControllerContainerTest.java)
 
+___
+The controller testcontainer: 
+[InsuranceQuoteControllerContainerTest.java](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/test/java/com/insurance/insurancequote/controller/InsuranceQuoteControllerContainerTest.java)
+
+
+___
 ### TODO list
 
 - [x] criar projeto pelo Spring Initializr
@@ -130,3 +173,5 @@ The controller testcontainer: [InsuranceQuoteControllerContainerTest.java](https
 - [ ] configurar CI/CD
 - [ ] adicionar "logs, traces e metrics" distribuido
 - [ ] teste de carga
+
+___
