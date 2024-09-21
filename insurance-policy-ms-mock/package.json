@@ -1,0 +1,12 @@
+{
+  "name": "insurance-policy-ms-mock",
+  "version": "1.0.0",
+  "description": "Simple app to simulate an Insurance Policy Microservice",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "kafkajs": "^2.0.0"
+  }
+}
