@@ -35,8 +35,7 @@ public class InsuranceQuoteController {
         return new ResponseEntity<>(quote, HttpStatus.OK);
     }
 
-    // TODO remove it
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<InsuranceQuoteDTO>> getAllInsuranceQuotes() {
         var result = service.getAllInsuranceQuotes()
                 .stream()

@@ -13,6 +13,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -36,13 +37,13 @@ public class InsuranceQuoteControllerContainerTest {
     private InsuranceQuoteRepository insuranceQuoteRepository;
 
     @Container
-    private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
+    private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("insurance")
             .withUsername("insuranceContainer")
             .withPassword("insuranceContainer");
 
     @DynamicPropertySource
-    static void registerPgProperties(DynamicPropertyRegistry registry) {
+    static void overridePgProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
         registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
@@ -50,13 +51,31 @@ public class InsuranceQuoteControllerContainerTest {
 
     @Container
     static final KafkaContainer kafka = new KafkaContainer(
-            DockerImageName.parse("confluentinc/cp-kafka:latest")
+            DockerImageName.parse("confluentinc/cp-kafka:7.5.6")
     );
 
     @DynamicPropertySource
-    static void overrideProperties(DynamicPropertyRegistry registry) {
+    static void overrideKafkaProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
         registry.add("spring.kafka.consumer.auto-offset-reset", () -> "earliest");
+    }
+
+    @Container
+    public static MockServerContainer mockServerContainer = new MockServerContainer(
+            DockerImageName.parse("mockserver/mockserver:5.15.0")
+    )
+            .withClasspathResourceMapping(
+                    "testcontainer/catalog-ms-mockserver/catalog-ms-mock-data.json",
+                    "/config/init_expectations.json",
+                    org.testcontainers.containers.BindMode.READ_ONLY)
+            .withEnv("MOCKSERVER_INITIALIZATION_JSON_PATH", "/config/init_expectations.json");
+
+    @DynamicPropertySource
+    static void overrideCatalogMsProperties(DynamicPropertyRegistry registry) {
+        String catalogUrl = String.format("http://%s:%d/catalog-ms-mock",
+                mockServerContainer.getHost(),
+                mockServerContainer.getServerPort());
+        registry.add("catalog-ms.url", () -> catalogUrl);
     }
 
     @BeforeEach

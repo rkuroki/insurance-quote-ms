@@ -1,18 +1,14 @@
 package com.insurance.insurancequote.controller;
 
-import com.insurance.insurancequote.messaging.dto.InsurancePolicyCreatedEvent;
-import com.insurance.insurancequote.messaging.dto.InsuranceQuoteReceivedEvent;
-import com.insurance.insurancequote.messaging.publisher.InsuranceQuoteReceivedPub;
-import com.insurance.insurancequote.messaging.subscriber.InsurancePolicyCreationSub;
-import com.insurance.insurancequote.xxx.insuransepolicyms.PolicyMockSub;
+import com.insurance.insurancequote.config.MockCatalogServicesConfig;
+import com.insurance.insurancequote.config.MockKafkaConfig;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -26,27 +22,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
+@Import({MockKafkaConfig.class, MockCatalogServicesConfig.class})
 public class InsuranceQuoteControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private InsuranceQuoteReceivedPub insuranceQuoteReceivedPub;
-
-    @MockBean
-    private InsurancePolicyCreationSub insurancePolicyCreationSub;
-
-    @MockBean
-    private KafkaTemplate<String, InsuranceQuoteReceivedEvent> kafkaTemplate;
-
-    // TODO remove insurance-policy-ms mock
-    @MockBean
-    private PolicyMockSub policyMockSub;
-
-    // TODO remove insurance-policy-ms mock
-    @MockBean
-    private KafkaTemplate<String, InsurancePolicyCreatedEvent> policyKafkaTemplate;
 
     @Test
     public void saveAndGetQuote() throws Exception {
