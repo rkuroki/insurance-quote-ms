@@ -57,5 +57,98 @@
         "Content-Type": "application/json"
       }
     }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/catalog-ms-mock/products/8c71f0a2-7351-4a90-a84c-ef376f481cb5"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "id": "8c71f0a2-7351-4a90-a84c-ef376f481cb5",
+        "name": "Seguro Viagem",
+        "created_at": "2024-07-15T00:00:00Z",
+        "active": true,
+        "offers": [
+          "41e54e5a-f5de-4560-bc4b-5fa43a61cb29",
+          "ae91fc82-e408-41db-a657-3b1f2d5cfa2c"
+        ]
+      },
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/catalog-ms-mock/offers/41e54e5a-f5de-4560-bc4b-5fa43a61cb29"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "id": "41e54e5a-f5de-4560-bc4b-5fa43a61cb29",
+        "product_id": "8c71f0a2-7351-4a90-a84c-ef376f481cb5",
+        "name": "Seguro Viagem Nacional",
+        "created_at": "2024-07-15T00:00:00Z",
+        "active": true,
+        "coverages": {
+          "Acidentes pessoais": 1000.0,
+          "Assistência médica": 2000.0,
+          "Cancelamento de viagem": 3000.0,
+          "Extravio de bagagem": 4000.0
+        },
+        "assistances": [
+          "Suporte em viagem",
+          "Translado médico"
+        ],
+        "monthly_premium_amount": {
+          "max_amount": 75.50,
+          "min_amount": 35.0,
+          "suggested_amount": 45.0
+        }
+      },
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/catalog-ms-mock/offers/ae91fc82-e408-41db-a657-3b1f2d5cfa2c"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "id": "ae91fc82-e408-41db-a657-3b1f2d5cfa2c",
+        "product_id": "8c71f0a2-7351-4a90-a84c-ef376f481cb5",
+        "name": "Seguro Viagem Internacional",
+        "created_at": "2024-07-15T00:00:00Z",
+        "active": true,
+        "coverages": {
+          "Acidentes pessoais": 11000.0,
+          "Assistência médica": 22000.0,
+          "Cancelamento de viagem": 33000.0,
+          "Extravio de bagagem": 44000.0
+        },
+        "assistances": [
+          "Suporte em viagem",
+          "Translado médico",
+          "Repatriação sanitária",
+          "Assistência jurídica",
+          "Assistência em emergências"
+        ],
+        "monthly_premium_amount": {
+          "max_amount": 150.90,
+          "min_amount": 60.0,
+          "suggested_amount": 80.25
+        }
+      },
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
   }
 ]
