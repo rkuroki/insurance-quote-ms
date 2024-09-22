@@ -6,7 +6,7 @@ This microservice module is responsible for registering and retrieving **Insuran
 It provides two endpoints: one for registering a quote and another for querying a registered quote by its ID.
 
 <details>
-<summary>The insurance quote registration process steps [expand] </summary>
+<summary>The insurance quote registration process steps <b>[expand]</b> </summary>
 
 1. Receiving the insurance quote request (`POST /insurance-quote`);
 1. Validate the request:
@@ -125,15 +125,15 @@ Some specific decisions:
 To facilitate initial development, I created a subscriber ([PolicyMockSub](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/main/java/com/insurance/insurancequote/xxx/insuransepolicyms/PolicyMockSub.java))
 for the `insurance-quote-received` topic, which generates a random ID for the Insurance Policy and publishes it to the `insurance-policy-created` topic.
 
-**This mock Subscriber is active and starts with the application.** So it is responsible for assigning an insurancePolicyId to the Insurance Quote...
+**This PolicyMockSub is active and starts with the application.** So it is responsible for assigning an insurancePolicyId to the Insurance Quote...
 
-To replace this mock subscriber, I attempted to create a small NodeJS application ([insurance-policy-ms-mock](https://github.com/rkuroki/insurance-quote-ms/tree/main/insurance-policy-ms-mock))
-to simulate the policy service, but I encountered issues connecting to the Kafka containe (connection library problems).
+To replace this mock subscriber, I attempted to create a small **NodeJS application ([insurance-policy-ms-mock](https://github.com/rkuroki/insurance-quote-ms/tree/main/insurance-policy-ms-mock))**
+to simulate the policy service, but I encountered issues connecting to the Kafka container (connection library problems).
 I couldn't resolve it in time, but I will keep trying.
 
 <br/>
 
-### Tests Types Implemented:
+### Test Types Implemented:
 
 - **Unit Tests**: For most of the classes and methods.
 - **Component Tests**: For the controller, services, repositories, validators, etc. Using the profile 'test', it runs with H2 in memory database and mocking all other external dependencies.
@@ -491,8 +491,8 @@ I used this TODO list below to organize myself while developing the project:
                 - [x] sucesso
                 - [x] erro por campo do payload invalido (400)
                 - [x] erro por validação de regra (422)
-    - [ ] diagrama de sequencia do fluxo principal (PlantUML)
-    - [ ] arvore de diretorios e principais arquivos, descrever principais
+    - [x] diagrama de sequencia do fluxo principal (PlantUML)
+    - [x] arvore de diretorios e principais arquivos, descrever principais
     - [ ] adicionar observacoes gerais
 - [ ] configurar CI/CD (github actions)
 - [ ] adicionar "logs, traces e metrics" distribuido
