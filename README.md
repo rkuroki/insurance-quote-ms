@@ -1,5 +1,3 @@
-___
-
 # ACME Seguros - Insurance Quote Microservice
 
 ## Description
@@ -7,7 +5,8 @@ ___
 This microservice module is responsible for registering and retrieving **Insurance Quotes**.
 It provides two endpoints: one for registering a quote and another for querying a registered quote by its ID.
 
-The insurance quote registration process consists of the following steps:
+<details>
+<summary>The insurance quote registration process steps</summary>
 
 1. Receiving the insurance quote request (`POST /insurance-quote`);
 1. Validate the request:
@@ -24,6 +23,8 @@ The insurance quote registration process consists of the following steps:
 1. This microservice consumes the notification of the Policy generation;
 1. It updates the Insurance Quote record in the database, adding the generated Insurance Policy ID;
 1. By querying the Insurance Quote via the provided endpoint (`GET /insurance-quote/{id}`), it's possible to retrieve the Insurance Quote record;
+
+</details>
 
 ## Technologies
 
@@ -82,6 +83,9 @@ curl --request GET \
 - Insomnia Collection Cases: [Insomnia_Collection_2024-09-22.json](https://github.com/rkuroki/insurance-quote-ms/blob/main/misc/Insomnia_Collection_2024-09-22.json)
 - Endpoints doc and test: http://localhost:8080/swagger-ui/index.html
 
+<br/>
+<br/>
+
 ## Project Conception Details
 
 ### Approaches
@@ -96,16 +100,38 @@ Some specific decisions:
 - Added a ['status' field to the Insurance Quote entity](https://github.com/rkuroki/insurance-quote-ms/blob/130f18bdc4b87d34b0ce17c1dbc27c8de96cf216/src/main/java/com/insurance/insurancequote/entity/InsuranceQuote.java#L51)
   to track its processing state, providing better visibility into the asynchronous message processing.
 
+<br/>
+
+### Main flow sequence diagram: Registering an Insurance Quote
+
+``` plantuml
+
+```
+
+<br/>
+
 ### Simulating the 'Insurance Policy Microservice'
 
 To facilitate initial development, I created a subscriber ([PolicyMockSub](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/main/java/com/insurance/insurancequote/xxx/insuransepolicyms/PolicyMockSub.java))
 for the `insurance-quote-received` topic, which generates a random ID for the Insurance Policy and publishes it to the `insurance-policy-created` topic.
 
-This Mock Subscriber is active and starts with the application. So it is responsible for assigning an insurancePolicyId to the Insurance Quote...
+**This mock Subscriber is active and starts with the application.** So it is responsible for assigning an insurancePolicyId to the Insurance Quote...
 
 To replace this mock subscriber, I attempted to create a small NodeJS application ([insurance-policy-ms-mock](https://github.com/rkuroki/insurance-quote-ms/tree/main/insurance-policy-ms-mock))
 to simulate the policy service, but I encountered issues connecting to the Kafka containe (connection library problems).
 I couldn't resolve it in time, but I will keep trying.
+
+<br/>
+
+### Tests Types Implemented:
+
+- **Unit Tests**: For the main classes and components, such as the entity, service, and validators.
+- **Integration Tests**: For the controller, using the Testcontainers library to simulate the external services.
+- **Integration Tests** with Testcontainers: Mainly for the controller ([InsuranceQuoteControllerContainerTest.java](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/test/java/com/insurance/insurancequote/controller/InsuranceQuoteControllerContainerTest.java)), starting all the external dependencies.
+- **Contract Tests**: For the external services, starting the MockServer with Testcontainer to simulate the `Catalog Microservice`.
+
+<br/>
+<br/>
 
 ### Insurance Quote Request Creation - Endpoint definition
 
@@ -142,7 +168,7 @@ I couldn't resolve it in time, but I will keep trying.
 #### Responses:
 
 1. Created (status `201`)
-    ``` json
+    ``` javascript
     {
       "id": 123456,
       "insurance_policy_id": null, // Long or null
@@ -154,7 +180,7 @@ I couldn't resolve it in time, but I will keep trying.
     ```
 
 2. Bad Request (status `400`): invalid payload
-    ``` json
+    ``` javascript
     {
       "statusCode": "BAD_REQUEST",
       "message": "Invalid payload, check 'details'.",
@@ -167,13 +193,15 @@ I couldn't resolve it in time, but I will keep trying.
 
 3. Unprocessable Entity (status `422`): validation rule error
 
-    ``` json
+    ``` javascript
     {
       "statusCode": "UNPROCESSABLE_ENTITY",
       "message": "The coverage value for [Incêndio] exceeds the maximum allowed.",
       "details": null
     }
     ```
+
+<br/>
 
 ### Insurance Quote Get by ID - Endpoint definition
 
@@ -183,7 +211,7 @@ I couldn't resolve it in time, but I will keep trying.
 
 1. Ok (status `200`)
 
-    ``` json
+    ``` javascript
     {
       "id": 123456,
       "insurance_policy_id": null, // Long or null
@@ -197,7 +225,7 @@ I couldn't resolve it in time, but I will keep trying.
 
 1. Not found (status `404`)
 
-    ``` json
+    ``` javascript
     {
       "statusCode": "string",
       "message": "Insurance Quote not found with id: ",
@@ -205,15 +233,8 @@ I couldn't resolve it in time, but I will keep trying.
     }
     ```
 
-### Testcontainer
-
-The controller testcontainer: [InsuranceQuoteControllerContainerTest.java](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/test/java/com/insurance/insurancequote/controller/InsuranceQuoteControllerContainerTest.java)
-
-### Main flow sequence diagram
-
-``` plantuml
-
-```
+<br/>
+<br/>
 
 ### Directory Structure (main files)
 
@@ -369,6 +390,8 @@ The controller testcontainer: [InsuranceQuoteControllerContainerTest.java](https
 </code></pre>
 
 </details>
+
+<br/>
 
 ___
 
