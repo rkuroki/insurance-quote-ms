@@ -1,0 +1,36 @@
+@startuml
+skinparam backgroundColor #faf9ed
+actor User
+participant "IQController" as IQC
+participant "IQService" as IQS
+participant "IQValidator" as IQV
+participant "RuleHandlers" as RH
+participant "IQRepository" as IQR
+participant "IQReceivedPub" as IQP
+participant "Catalog MS" as CM #ffff99
+database "Postgresql" as DB #ffff99
+queue "Kafka" as K #ffff99
+
+User -> IQC: POST /insurance-quote
+IQC -> IQS: create(request)
+
+IQS -> CM: ProductService.getProductById()
+CM -> IQS: Return Product
+IQS -> CM: OfferService.getOfferById()
+CM -> IQS: Return Offer
+
+IQS -> IQV: void validateInsuranceQuote(request, product, offer)
+IQV -> RH: ProductActiveRule.handler()
+IQV -> RH: OfferActiveAndValidRule.handler()
+IQV -> RH: OfferCoveragesRule.handler()
+IQV -> RH: Other handlers...
+RH --> IQV: Complete (no exceptions)
+
+IQS -> IQR: save(InsuranceQuote)
+IQR -> DB: Persist InsuranceQuote
+DB -> IQR: Saved Quote
+IQR -> IQS: Saved Quote
+
+IQS -> IQP: publish(insuranceQuoteId)
+IQP -> K: Publish message to "insurance-quote-received"
+@enduml

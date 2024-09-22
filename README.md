@@ -6,7 +6,7 @@ This microservice module is responsible for registering and retrieving **Insuran
 It provides two endpoints: one for registering a quote and another for querying a registered quote by its ID.
 
 <details>
-<summary>The insurance quote registration process steps</summary>
+<summary>The insurance quote registration process steps [expand] </summary>
 
 1. Receiving the insurance quote request (`POST /insurance-quote`);
 1. Validate the request:
@@ -23,6 +23,9 @@ It provides two endpoints: one for registering a quote and another for querying 
 1. This microservice consumes the notification of the Policy generation;
 1. It updates the Insurance Quote record in the database, adding the generated Insurance Policy ID;
 1. By querying the Insurance Quote via the provided endpoint (`GET /insurance-quote/{id}`), it's possible to retrieve the Insurance Quote record;
+
+![image](https://github.com/user-attachments/assets/466a1076-7c54-4d97-a880-1134a96e2dd4)
+([diagram source](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/insurance-quote-registration-process_sequence-diagram.puml))
 
 </details>
 
@@ -103,11 +106,17 @@ Some specific decisions:
 
 <br/>
 
-### Main flow sequence diagram: Registering an Insurance Quote
+### Main flow sequence diagrams
 
-``` plantuml
+#### Insurance Quote Registration:
 
-```
+![image](https://github.com/user-attachments/assets/5049e722-f7a3-4c67-ae3d-93ad3ede8a3c)
+([diagram source](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/insurance-quote-registration-flow-sequence_diagram.puml))
+
+#### Insurance Policy Creation (`PolicyMockSub` is mocking the `Insurance Policy Microservice`):
+
+![image](https://github.com/user-attachments/assets/0d327c31-cdfa-488c-82af-b6fda0038337)
+([diagram source](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/Insurance-policy-creation-mock-sequence_diagram.puml))
 
 <br/>
 

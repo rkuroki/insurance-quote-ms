@@ -1,0 +1,29 @@
+
+@startuml
+skinparam backgroundColor #faf9ed
+actor User
+participant "Insurance Quote MS" as IQM #99cc00
+database "PosgreSQL" as DB #ffff99
+queue "Kafka" as K #ffff99
+participant "Catalog MS" as CM #ccff99
+participant "Insurance Policy MS" as IPM #ccff99
+
+User -> IQM: POST /insurance-quote
+IQM -> IQM: Field validation
+IQM -> CM: Fetch product and offer details
+CM -> IQM: Return product and offer details
+IQM -> IQM: Validate business rules
+IQM -> DB: Store Insurance Quote
+
+IQM -> K: Notify quote-received
+K --> IPM: Consume quote-received
+IPM -> IPM: Generate Insurance Policy
+IPM -> K: Notify policy-created
+K --> IQM: Consume policy-created
+
+IQM -> DB: Update Insurance Quote with policy ID
+User -> IQM: GET /insurance-quote/{id}
+IQM -> DB: Retrieve Insurance Quote
+DB -> IQM: Return Insurance Quote
+IQM -> User: Insurance Quote with policy ID
+@enduml

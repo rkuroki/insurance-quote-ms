@@ -1,0 +1,19 @@
+@startuml
+skinparam backgroundColor #faf9ed
+participant "PolicyMockSub *" as PMS #b14ff7
+queue "Kafka" as K #ffff99
+participant "InsurancePolicyCreationSub" as IPCS
+participant "InsuranceQuoteService" as IQS
+participant "InsuranceQuoteRepository" as IQR
+database "Postgresql" as DB #ffff99
+
+PMS --> K: Consume message from "insurance-quote-received"
+PMS -> PMS: Generate random insurancePolicyId
+PMS -> K: Publish message to "insurance-policy-created" (quoteId, policyId)
+
+IPCS --> K: Consume message from "insurance-policy-created"
+IPCS -> IQS: setInsurancePolicy(quoteId, policyId)
+IQS -> IQR: Save InsuranceQuote with insurancePolicyId
+IQR -> DB: Persist updated InsuranceQuote
+DB --> IQR: InsuranceQuote updated
+@enduml
