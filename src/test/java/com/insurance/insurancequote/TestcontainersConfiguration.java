@@ -7,19 +7,22 @@ import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import static com.insurance.insurancequote.config.TestcontaionerAppConstants.KAFKA_IMAGE;
+import static com.insurance.insurancequote.config.TestcontaionerAppConstants.POSTGRESQL_IMAGE;
+
 @TestConfiguration(proxyBeanMethods = false)
-class TestcontainersConfiguration {
+public class TestcontainersConfiguration {
 
     @Bean
     @ServiceConnection
     PostgreSQLContainer<?> postgresContainer() {
-        return new PostgreSQLContainer<>(DockerImageName.parse("postgres:16"));
+        return new PostgreSQLContainer<>(DockerImageName.parse(POSTGRESQL_IMAGE));
     }
 
     @Bean
     @ServiceConnection
     KafkaContainer kafkaContainer() {
-        return new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.5.6"));
+        return new KafkaContainer(DockerImageName.parse(KAFKA_IMAGE));
     }
 
 }

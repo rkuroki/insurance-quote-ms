@@ -28,13 +28,13 @@ public class MockKafkaConfig {
         return mock(KafkaTemplate.class);
     }
 
-    // TODO remove insurance-policy-ms mock
+    // TODO (kuroki): remove insurance-policy-ms mock
     @Bean
     public PolicyMockSub policyMockSub() {
         return mock(PolicyMockSub.class);
     }
 
-    // TODO remove insurance-policy-ms mock
+    // TODO (kuroki): remove insurance-policy-ms mock
     @Bean
     public KafkaTemplate<String, InsurancePolicyCreatedEvent> policyKafkaTemplate() {
         return mock(KafkaTemplate.class);

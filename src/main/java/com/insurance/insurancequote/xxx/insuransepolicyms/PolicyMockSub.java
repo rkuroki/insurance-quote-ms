@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static com.insurance.insurancequote.messaging.MessagingConstants.TOPIC_INSURANCE_POLICY_CREATED;
 import static com.insurance.insurancequote.messaging.MessagingConstants.TOPIC_INSURANCE_QUOTE_RECEIVED;
 
-// TODO: TEMPORARY MOCK SUBSCRIBER (insurance-policy-ms), REMOVE IT.
+// TODO (kuroki): TEMPORARY MOCK SUBSCRIBER (insurance-policy-ms), REMOVE IT.
 
 @Component
 @Slf4j

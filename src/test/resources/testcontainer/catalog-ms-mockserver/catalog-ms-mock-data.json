@@ -72,7 +72,8 @@
         "active": true,
         "offers": [
           "41e54e5a-f5de-4560-bc4b-5fa43a61cb29",
-          "ae91fc82-e408-41db-a657-3b1f2d5cfa2c"
+          "ae91fc82-e408-41db-a657-3b1f2d5cfa2c",
+          "21d7b9b2-f6d3-49b5-a697-6e5c5c2e4b9d"
         ]
       },
       "headers": {
@@ -144,6 +145,91 @@
           "max_amount": 150.90,
           "min_amount": 60.0,
           "suggested_amount": 80.25
+        }
+      },
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/catalog-ms-mock/offers/21d7b9b2-f6d3-49b5-a697-6e5c5c2e4b9d"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "id": "21d7b9b2-f6d3-49b5-a697-6e5c5c2e4b9d",
+        "product_id": "8c71f0a2-7351-4a90-a84c-ef376f481cb5",
+        "name": "Seguro Viagem Espacial",
+        "created_at": "2024-08-20T00:00:00Z",
+        "active": false,
+        "coverages": {
+          "Colisão com meteoritos": 5000000.0,
+          "Resgate em órbita": 1000000.0
+        },
+        "assistances": [
+          "Resgate em corpos celestes",
+          "Suporte psicológico pós-missão"
+        ],
+        "monthly_premium_amount": {
+          "max_amount": 5000.0,
+          "min_amount": 2000.0,
+          "suggested_amount": 3000.0
+        }
+      },
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/catalog-ms-mock/products/5417122d-2336-422d-b07e-457f186bbf3e"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "id": "5417122d-2336-422d-b07e-457f186bbf3e",
+        "name": "Seguro Veicular",
+        "created_at": "2024-07-15T00:00:00Z",
+        "active": false,
+        "offers": [
+          "40fe5d53-e5ba-4905-a350-b5c391b0435b"
+        ]
+      },
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/catalog-ms-mock/offers/40fe5d53-e5ba-4905-a350-b5c391b0435b"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "id": "40fe5d53-e5ba-4905-a350-b5c391b0435b",
+        "product_id": "5417122d-2336-422d-b07e-457f186bbf3e",
+        "name": "Seguro Veicular Passeio",
+        "created_at": "2024-07-15T00:00:00Z",
+        "active": false,
+        "coverages": {
+          "Colisão": 500.0,
+          "Incêndio": 700.0
+        },
+        "assistances": [
+          "Guincho",
+          "Desastres naturais"
+        ],
+        "monthly_premium_amount": {
+          "max_amount": 10.0,
+          "min_amount": 35.0,
+          "suggested_amount": 20.0
         }
       },
       "headers": {

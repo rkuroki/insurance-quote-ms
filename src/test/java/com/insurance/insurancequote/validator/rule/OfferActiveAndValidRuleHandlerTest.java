@@ -62,6 +62,7 @@ public class OfferActiveAndValidRuleHandlerTest {
     public void testValidate_OfferHasNoAssistances() {
         when(offer.getActive()).thenReturn(true);
         when(offer.getAssistances()).thenReturn(null);
+        when(offer.getCoverages()).thenReturn(new HashMap<>());
 
         assertThatThrownBy(() -> ruleHandler.validate(quote, product, offer))
                 .isInstanceOf(InsuranceQuoteRuleValidationException.class)

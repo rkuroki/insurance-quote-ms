@@ -19,6 +19,11 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.time.Duration;
+
+import static com.insurance.insurancequote.config.TestcontaionerAppConstants.*;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,7 +42,7 @@ public class InsuranceQuoteControllerContainerTest {
     private InsuranceQuoteRepository insuranceQuoteRepository;
 
     @Container
-    private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16")
+    private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(POSTGRESQL_IMAGE)
             .withDatabaseName("insurance")
             .withUsername("insuranceContainer")
             .withPassword("insuranceContainer");
@@ -51,7 +56,7 @@ public class InsuranceQuoteControllerContainerTest {
 
     @Container
     static final KafkaContainer kafka = new KafkaContainer(
-            DockerImageName.parse("confluentinc/cp-kafka:7.5.6")
+            DockerImageName.parse(KAFKA_IMAGE)
     );
 
     @DynamicPropertySource
@@ -62,7 +67,7 @@ public class InsuranceQuoteControllerContainerTest {
 
     @Container
     public static MockServerContainer mockServerContainer = new MockServerContainer(
-            DockerImageName.parse("mockserver/mockserver:5.15.0")
+            DockerImageName.parse(MOCKSERVER_IMAGE)
     )
             .withClasspathResourceMapping(
                     "testcontainer/catalog-ms-mockserver/catalog-ms-mock-data.json",
@@ -154,14 +159,99 @@ public class InsuranceQuoteControllerContainerTest {
                 .andExpect(jsonPath("$.customer.email", is("johnwick@gmail.com")))
                 .andExpect(jsonPath("$.customer.phone_number", is("11950503030")));
 
-        // Getting after policy creation
-        Thread.sleep(5000); // TODO REMOVE IT!!!! (config and use awaitility)
+        await()
+                .pollInterval(Duration.ofSeconds(3))
+                .atMost(10, SECONDS)
+                .untilAsserted(() -> {
+                    mockMvc.perform(get("/insurance-quote/" + id)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(quoteRequest))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.id", isA(Number.class)))
+                            .andExpect(jsonPath("$.insurance_policy_id", isA(Number.class)));
+                });
+    }
+
+    @Test
+    public void saveAndGetQuote_otherQuote() throws Exception {
+        String quoteRequest = """
+                    {
+                      "product_id": "8c71f0a2-7351-4a90-a84c-ef376f481cb5",
+                      "offer_id": "ae91fc82-e408-41db-a657-3b1f2d5cfa2c",
+                      "category": "TRAVEL",
+                      "total_monthly_premium_amount": 90.70,
+                      "total_coverage_amount": 85000.00,
+                      "coverages": {
+                          "Cancelamento de viagem": 25000.00,
+                          "Extravio de bagagem": 38000.00,
+                          "Assistência médica": 22000.00
+                      },
+                      "assistances": [
+                          "Repatriação sanitária",
+                          "Assistência jurídica"
+                      ],
+                      "customer": {
+                          "document_number": "4839843983",
+                          "name": "João do Teste",
+                          "type": "ARTIFICIAL",
+                          "gender": "FEMALE",
+                          "date_of_birth": "1923-01-31",
+                          "email": "joaodoteste@gmail.com",
+                          "phone_number": 11988887777
+                      }
+                    }
+                """;
+
+        // Saving Quote Request
+        MvcResult result = mockMvc.perform(post("/insurance-quote")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(quoteRequest))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", isA(Number.class)))
+                .andExpect(jsonPath("$.product_id", is("8c71f0a2-7351-4a90-a84c-ef376f481cb5")))
+                .andExpect(jsonPath("$.offer_id", is("ae91fc82-e408-41db-a657-3b1f2d5cfa2c")))
+                .andReturn();
+
+        String jsonResponse = result.getResponse().getContentAsString();
+        Long id = ((Number) JsonPath.read(jsonResponse, "$.id")).longValue();
+
+        // Getting
         mockMvc.perform(get("/insurance-quote/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(quoteRequest))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", isA(Number.class)))
-                .andExpect(jsonPath("$.insurance_policy_id", isA(Number.class)));
+                .andExpect(jsonPath("$.product_id", is("8c71f0a2-7351-4a90-a84c-ef376f481cb5")))
+                .andExpect(jsonPath("$.offer_id", is("ae91fc82-e408-41db-a657-3b1f2d5cfa2c")))
+                .andExpect(jsonPath("$.category", is("TRAVEL")))
+                .andExpect(jsonPath("$.total_monthly_premium_amount", is(90.70)))
+                .andExpect(jsonPath("$.total_coverage_amount", is(85000.00)))
+                .andExpect(jsonPath("$.coverages", aMapWithSize(3)))
+                .andExpect(jsonPath("$.coverages.['Cancelamento de viagem']", is(25000.00)))
+                .andExpect(jsonPath("$.coverages.['Extravio de bagagem']", is(38000.00)))
+                .andExpect(jsonPath("$.coverages.['Assistência médica']", is(22000.00)))
+                .andExpect(jsonPath("$.assistances", hasSize(2)))
+                .andExpect(jsonPath("$.assistances[0]", is("Repatriação sanitária")))
+                .andExpect(jsonPath("$.assistances[1]", is("Assistência jurídica")))
+                .andExpect(jsonPath("$.customer.document_number", is("4839843983")))
+                .andExpect(jsonPath("$.customer.name", is("João do Teste")))
+                .andExpect(jsonPath("$.customer.type", is("ARTIFICIAL")))
+                .andExpect(jsonPath("$.customer.gender", is("FEMALE")))
+                .andExpect(jsonPath("$.customer.date_of_birth", is("1923-01-31")))
+                .andExpect(jsonPath("$.customer.email", is("joaodoteste@gmail.com")))
+                .andExpect(jsonPath("$.customer.phone_number", is("11988887777")));
+
+        await()
+                .pollInterval(Duration.ofSeconds(3))
+                .atMost(10, SECONDS)
+                .untilAsserted(() -> {
+                    mockMvc.perform(get("/insurance-quote/" + id)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(quoteRequest))
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("$.id", isA(Number.class)))
+                            .andExpect(jsonPath("$.insurance_policy_id", isA(Number.class)));
+                });
     }
 
 }

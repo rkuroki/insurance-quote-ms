@@ -44,4 +44,4 @@ services:
       - kafka
     environment:
       - KAFKAJS_NO_PARTITIONER_WARNING=1
-      - ENABLED=true
+      - ENABLED=false

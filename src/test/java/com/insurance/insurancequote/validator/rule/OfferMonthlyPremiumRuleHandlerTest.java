@@ -11,7 +11,7 @@ import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -45,24 +45,36 @@ public class OfferMonthlyPremiumRuleHandlerTest {
     @Test
     public void testValidate_BelowMinRange() {
         when(offer.getMonthlyPremiumAmount()).thenReturn(monthlyPremiumAmount);
-        when(offer.getMonthlyPremiumAmount().getMinAmount()).thenReturn(100.0);
-        when(offer.getMonthlyPremiumAmount().getMaxAmount()).thenReturn(200.0);
-        when(quote.getTotalMonthlyPremiumAmount()).thenReturn(BigDecimal.valueOf(50.0));
+        when(offer.getMonthlyPremiumAmount().getMinAmount()).thenReturn(100.00);
+        when(offer.getMonthlyPremiumAmount().getMaxAmount()).thenReturn(200.00);
+        when(quote.getTotalMonthlyPremiumAmount()).thenReturn(BigDecimal.valueOf(50.00));
 
-        assertThrows(InsuranceQuoteRuleValidationException.class, () -> {
-            ruleHandler.validate(quote, product, offer);
-        });
+        assertThatThrownBy(() -> ruleHandler.validate(quote, product, offer))
+                .isInstanceOf(InsuranceQuoteRuleValidationException.class)
+                .hasMessageContaining("The monthly premium amount must be between 100.0 and 200.0.");
     }
 
     @Test
     public void testValidate_AboveMaxRange() {
         when(offer.getMonthlyPremiumAmount()).thenReturn(monthlyPremiumAmount);
-        when(offer.getMonthlyPremiumAmount().getMinAmount()).thenReturn(100.0);
-        when(offer.getMonthlyPremiumAmount().getMaxAmount()).thenReturn(200.0);
-        when(quote.getTotalMonthlyPremiumAmount()).thenReturn(BigDecimal.valueOf(250.0));
+        when(offer.getMonthlyPremiumAmount().getMinAmount()).thenReturn(50.0);
+        when(offer.getMonthlyPremiumAmount().getMaxAmount()).thenReturn(400.0);
+        when(quote.getTotalMonthlyPremiumAmount()).thenReturn(BigDecimal.valueOf(450.0));
 
-        assertThrows(InsuranceQuoteRuleValidationException.class, () -> {
-            ruleHandler.validate(quote, product, offer);
-        });
+        assertThatThrownBy(() -> ruleHandler.validate(quote, product, offer))
+                .isInstanceOf(InsuranceQuoteRuleValidationException.class)
+                .hasMessageContaining("The monthly premium amount must be between 50.0 and 400.0.");
+    }
+
+    @Test
+    public void testValidate_AboveMaxRangeInCent() {
+        when(offer.getMonthlyPremiumAmount()).thenReturn(monthlyPremiumAmount);
+        when(offer.getMonthlyPremiumAmount().getMinAmount()).thenReturn(20.0);
+        when(offer.getMonthlyPremiumAmount().getMaxAmount()).thenReturn(30.0);
+        when(quote.getTotalMonthlyPremiumAmount()).thenReturn(BigDecimal.valueOf(30.01));
+
+        assertThatThrownBy(() -> ruleHandler.validate(quote, product, offer))
+                .isInstanceOf(InsuranceQuoteRuleValidationException.class)
+                .hasMessageContaining("The monthly premium amount must be between 20.0 and 30.0.");
     }
 }

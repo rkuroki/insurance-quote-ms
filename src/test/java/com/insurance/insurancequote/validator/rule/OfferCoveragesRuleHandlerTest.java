@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -28,51 +28,6 @@ public class OfferCoveragesRuleHandlerTest {
         quote = mock(InsuranceQuoteDTO.class);
         product = mock(ProductDTO.class);
         offer = mock(OfferDTO.class);
-    }
-
-    @Test
-    public void testValidate_coverageNotInOffer() {
-        Map<String, BigDecimal> quoteCoverages = new HashMap<>();
-        quoteCoverages.put("CoverageA", BigDecimal.valueOf(100));
-        when(quote.getCoverages()).thenReturn(quoteCoverages);
-
-        Map<String, BigDecimal> offerCoverages = new HashMap<>();
-        when(offer.getCoverages()).thenReturn(offerCoverages);
-
-        assertThrows(InsuranceQuoteRuleValidationException.class, () -> {
-            ruleHandler.validate(quote, product, offer);
-        });
-    }
-
-    @Test
-    public void testValidate_coverageValueExceedsMax() {
-        Map<String, BigDecimal> quoteCoverages = new HashMap<>();
-        quoteCoverages.put("CoverageA", BigDecimal.valueOf(200));
-        when(quote.getCoverages()).thenReturn(quoteCoverages);
-
-        Map<String, BigDecimal> offerCoverages = new HashMap<>();
-        offerCoverages.put("CoverageA", BigDecimal.valueOf(100));
-        when(offer.getCoverages()).thenReturn(offerCoverages);
-
-        assertThrows(InsuranceQuoteRuleValidationException.class, () -> {
-            ruleHandler.validate(quote, product, offer);
-        });
-    }
-
-    @Test
-    public void testValidate_totalCoverageAmountMismatch() {
-        Map<String, BigDecimal> quoteCoverages = new HashMap<>();
-        quoteCoverages.put("CoverageA", BigDecimal.valueOf(100));
-        when(quote.getCoverages()).thenReturn(quoteCoverages);
-        when(quote.getTotalCoverageAmount()).thenReturn(BigDecimal.valueOf(200));
-
-        Map<String, BigDecimal> offerCoverages = new HashMap<>();
-        offerCoverages.put("CoverageA", BigDecimal.valueOf(100));
-        when(offer.getCoverages()).thenReturn(offerCoverages);
-
-        assertThrows(InsuranceQuoteRuleValidationException.class, () -> {
-            ruleHandler.validate(quote, product, offer);
-        });
     }
 
     @Test
@@ -106,6 +61,51 @@ public class OfferCoveragesRuleHandlerTest {
     }
 
     @Test
+    public void testValidate_coverageNotInOffer() {
+        Map<String, BigDecimal> quoteCoverages = new HashMap<>();
+        quoteCoverages.put("CoverageA", BigDecimal.valueOf(100));
+        when(quote.getCoverages()).thenReturn(quoteCoverages);
+
+        Map<String, BigDecimal> offerCoverages = new HashMap<>();
+        when(offer.getCoverages()).thenReturn(offerCoverages);
+
+        assertThatThrownBy(() -> ruleHandler.validate(quote, product, offer))
+                .isInstanceOf(InsuranceQuoteRuleValidationException.class)
+                .hasMessageContaining("The coverage [CoverageA] is not available in the offer.");
+    }
+
+    @Test
+    public void testValidate_coverageValueExceedsMax() {
+        Map<String, BigDecimal> quoteCoverages = new HashMap<>();
+        quoteCoverages.put("CoverageA", BigDecimal.valueOf(200));
+        when(quote.getCoverages()).thenReturn(quoteCoverages);
+
+        Map<String, BigDecimal> offerCoverages = new HashMap<>();
+        offerCoverages.put("CoverageA", BigDecimal.valueOf(100));
+        when(offer.getCoverages()).thenReturn(offerCoverages);
+
+        assertThatThrownBy(() -> ruleHandler.validate(quote, product, offer))
+                .isInstanceOf(InsuranceQuoteRuleValidationException.class)
+                .hasMessageContaining("The coverage value for [CoverageA] exceeds the maximum allowed.");
+    }
+
+    @Test
+    public void testValidate_totalCoverageAmountMismatch() {
+        Map<String, BigDecimal> quoteCoverages = new HashMap<>();
+        quoteCoverages.put("CoverageA", BigDecimal.valueOf(100));
+        when(quote.getCoverages()).thenReturn(quoteCoverages);
+        when(quote.getTotalCoverageAmount()).thenReturn(BigDecimal.valueOf(200));
+
+        Map<String, BigDecimal> offerCoverages = new HashMap<>();
+        offerCoverages.put("CoverageA", BigDecimal.valueOf(100));
+        when(offer.getCoverages()).thenReturn(offerCoverages);
+
+        assertThatThrownBy(() -> ruleHandler.validate(quote, product, offer))
+                .isInstanceOf(InsuranceQuoteRuleValidationException.class)
+                .hasMessageContaining("The sum of coverages amount does not match the specified total coverage amount.");
+    }
+
+    @Test
     public void testValidate_multipleCoverages_oneExceedsMax() {
         Map<String, BigDecimal> quoteCoverages = new HashMap<>();
         quoteCoverages.put("CoverageA", BigDecimal.valueOf(100));
@@ -118,9 +118,9 @@ public class OfferCoveragesRuleHandlerTest {
         offerCoverages.put("CoverageB", BigDecimal.valueOf(200));
         when(offer.getCoverages()).thenReturn(offerCoverages);
 
-        assertThrows(InsuranceQuoteRuleValidationException.class, () -> {
-            ruleHandler.validate(quote, product, offer);
-        });
+        assertThatThrownBy(() -> ruleHandler.validate(quote, product, offer))
+                .isInstanceOf(InsuranceQuoteRuleValidationException.class)
+                .hasMessageContaining("The coverage value for [CoverageB] exceeds the maximum allowed.");
     }
 
     @Test
@@ -146,8 +146,9 @@ public class OfferCoveragesRuleHandlerTest {
         Map<String, BigDecimal> offerCoverages = new HashMap<>();
         when(offer.getCoverages()).thenReturn(offerCoverages);
 
-        assertThrows(InsuranceQuoteRuleValidationException.class, () -> {
-            ruleHandler.validate(quote, product, offer);
-        });
+        assertThatThrownBy(() -> ruleHandler.validate(quote, product, offer))
+                .isInstanceOf(InsuranceQuoteRuleValidationException.class)
+                .hasMessageContaining("The coverage [CoverageA] is not available in the offer.");
     }
+
 }
