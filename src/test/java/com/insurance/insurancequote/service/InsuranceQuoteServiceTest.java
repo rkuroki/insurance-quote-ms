@@ -9,7 +9,7 @@ import com.insurance.insurancequote.external.ProductService;
 import com.insurance.insurancequote.external.dto.MonthlyPremiumAmountDTO;
 import com.insurance.insurancequote.external.dto.OfferDTO;
 import com.insurance.insurancequote.external.dto.ProductDTO;
-import com.insurance.insurancequote.messaging.publisher.InsuranceQuoteReceivedPub;
+import com.insurance.insurancequote.messaging.publisher.InsuranceQuoteReceivedPubImpl;
 import com.insurance.insurancequote.repository.InsuranceQuoteRepository;
 import com.insurance.insurancequote.validator.InsuranceQuoteValidator;
 import jakarta.persistence.EntityNotFoundException;
@@ -46,7 +46,7 @@ public class InsuranceQuoteServiceTest {
     private InsuranceQuoteValidator validator;
 
     @Mock
-    private InsuranceQuoteReceivedPub quoteReceivedPub;
+    private InsuranceQuoteReceivedPubImpl quoteReceivedPub;
 
     @InjectMocks
     private InsuranceQuoteServiceImpl insuranceQuoteService;
