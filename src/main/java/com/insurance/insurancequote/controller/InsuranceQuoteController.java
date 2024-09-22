@@ -1,6 +1,7 @@
 package com.insurance.insurancequote.controller;
 
 import com.insurance.insurancequote.dto.InsuranceQuoteDTO;
+import com.insurance.insurancequote.dto.InsuranceQuoteRequestDTO;
 import com.insurance.insurancequote.dto.mapper.InsuranceQuoteMapper;
 import com.insurance.insurancequote.service.InsuranceQuoteService;
 import jakarta.validation.Valid;
@@ -25,7 +26,7 @@ public class InsuranceQuoteController {
     }
 
     @PostMapping
-    public ResponseEntity<InsuranceQuoteDTO> create(@Valid @RequestBody InsuranceQuoteDTO request) {
+    public ResponseEntity<InsuranceQuoteDTO> create(@Valid @RequestBody InsuranceQuoteRequestDTO request) {
         return new ResponseEntity<>(service.create(request), HttpStatus.CREATED);
     }
 
