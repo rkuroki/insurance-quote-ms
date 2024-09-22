@@ -10,7 +10,7 @@ It provides two endpoints: one for registering a quote and another for querying 
 
 1. Receiving the insurance quote request (`POST /insurance-quote`);
 1. Validate the request:
-    - Request field validation (must comply with [the endpoint specification](#Insurance-Quote-Request-Creation---Endpoint-definition));
+    - Request field validation (must comply with [the endpoint specification](#Rest-API-Endpoints-descriptions));
     - Business rule validation:
         - Fetching data from the `Catalog Microservices`, which defines the characteristics of the available `Products` and `Offers` for Quotes;
         - Validating the requested quote, based on the rules of the selected Product and Offer;
@@ -76,12 +76,13 @@ curl --request GET \
   --url http://localhost:8080/insurance-quote/1
 ```
 
-#### More tests
+#### Another tests instructions
 
+- The Endpoints descriptions: [here](#Rest-API-Endpoints-descriptions)
 - More curls examples: [extra_test_curls](https://github.com/rkuroki/insurance-quote-ms/blob/main/misc/extra_test_curls.md)
-- All predefined data tests (Products and Offers): [catalog-ms-mock-data.json](https://github.com/rkuroki/insurance-quote-ms/blob/main/catalog-ms-mockserver/catalog-ms-mock-data.json)
-- Insomnia Collection Cases: [Insomnia_Collection_2024-09-22.json](https://github.com/rkuroki/insurance-quote-ms/blob/main/misc/Insomnia_Collection_2024-09-22.json)
-- Endpoints doc and test: http://localhost:8080/swagger-ui/index.html
+- All predefined data tests available (Products and Offers): [catalog-ms-mock-data.json](https://github.com/rkuroki/insurance-quote-ms/blob/main/catalog-ms-mockserver/catalog-ms-mock-data.json)
+- Insomnia Collection Cases calls: [Insomnia_Collection_2024-09-22.json](https://github.com/rkuroki/insurance-quote-ms/blob/main/misc/Insomnia_Collection_2024-09-22.json)
+- Swagger is available: http://localhost:8080/swagger-ui/index.html
 
 <br/>
 <br/>
@@ -125,15 +126,17 @@ I couldn't resolve it in time, but I will keep trying.
 
 ### Tests Types Implemented:
 
-- **Unit Tests**: For the main classes and components, such as the entity, service, and validators.
-- **Integration Tests**: For the controller, using the Testcontainers library to simulate the external services.
-- **Integration Tests** with Testcontainers: Mainly for the controller ([InsuranceQuoteControllerContainerTest.java](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/test/java/com/insurance/insurancequote/controller/InsuranceQuoteControllerContainerTest.java)), starting all the external dependencies.
+- **Unit Tests**: For most of the classes and methods.
+- **Component Tests**: For the controller, services, repositories, validators, etc. Using the profile 'test', it runs with H2 in memory database and mocking all other external dependencies.
+- **Integration Tests with Testcontainers**: Mainly for the controller ([InsuranceQuoteControllerContainerTest.java](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/test/java/com/insurance/insurancequote/controller/InsuranceQuoteControllerContainerTest.java)), starting all the external dependencies.
 - **Contract Tests**: For the external services, starting the MockServer with Testcontainer to simulate the `Catalog Microservice`.
 
 <br/>
 <br/>
 
-### Insurance Quote Request Creation - Endpoint definition
+## Rest API Endpoints descriptions
+
+### Insurance Quote Request Creation
 
 #### Path: `POST /insurance-quote`
 
@@ -203,7 +206,7 @@ I couldn't resolve it in time, but I will keep trying.
 
 <br/>
 
-### Insurance Quote Get by ID - Endpoint definition
+### Insurance Quote Get by ID
 
 #### Path: GET /insurance-quote/{id}
 
