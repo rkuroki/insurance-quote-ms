@@ -222,4 +222,59 @@ public class InsuranceQuoteControllerTest {
                 .andExpect(jsonPath("$.details", nullValue()));
     }
 
+    @Test
+    public void getAllInsuranceQuotes_sucess() throws Exception {
+        // Arrange
+        createInsuranceQuoteSuccessfully(); // 1
+        createInsuranceQuoteSuccessfully(); // 2
+
+        // Get saved quotes
+        mockMvc.perform(get("/insurance-quote"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", isA(Number.class)))
+                .andExpect(jsonPath("$[1].id", isA(Number.class)));
+    }
+
+    private void createInsuranceQuoteSuccessfully() throws Exception {
+        String quoteRequest = """
+                    {
+                      "product_id": "1b2da7cc-b367-4196-8a78-9cfeec21f587",
+                      "offer_id": "adc56d77-348c-4bf0-908f-22d402ee715c",
+                      "category": "HOME",
+                      "total_monthly_premium_amount": 75.25,
+                      "total_coverage_amount": 825000.00,
+                      "coverages": {
+                          "Incêndio": 250000.00,
+                          "Desastres naturais": 500000.00,
+                          "Responsabiliadade civil": 75000.00
+                      },
+                      "assistances": [
+                          "Encanador",
+                          "Eletricista",
+                          "Chaveiro 24h"
+                      ],
+                      "customer": {
+                          "document_number": "36205578900",
+                          "name": "John Wick",
+                          "type": "NATURAL",
+                          "gender": "MALE",
+                          "date_of_birth": "1973-05-02",
+                          "email": "johnwick@gmail.com",
+                          "phone_number": 11950503030
+                      }
+                    }
+                """;
+
+        // Request/save new quote
+        MvcResult result = mockMvc.perform(post("/insurance-quote")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(quoteRequest))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", isA(Number.class)))
+                .andExpect(jsonPath("$.product_id", is("1b2da7cc-b367-4196-8a78-9cfeec21f587")))
+                .andExpect(jsonPath("$.offer_id", is("adc56d77-348c-4bf0-908f-22d402ee715c")))
+                .andReturn();
+    }
+
 }

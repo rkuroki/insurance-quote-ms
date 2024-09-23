@@ -86,6 +86,7 @@ curl --request GET \
 - All predefined data tests available (Products and Offers): [catalog-ms-mock-data.json](https://github.com/rkuroki/insurance-quote-ms/blob/main/catalog-ms-mockserver/catalog-ms-mock-data.json)
 - Insomnia Collection Cases calls: [Insomnia_Collection_2024-09-22.json](https://github.com/rkuroki/insurance-quote-ms/blob/main/misc/Insomnia_Collection_2024-09-22.json)
 - Swagger is available: http://localhost:8080/swagger-ui/index.html
+- Test Coverage Report (after building): `insurance-quote-ms/build/reports/jacoco/test/html/index.html`
 
 <br/>
 <br/>
@@ -113,10 +114,21 @@ Some specific decisions:
 ![image](https://github.com/user-attachments/assets/5049e722-f7a3-4c67-ae3d-93ad3ede8a3c)
 ([diagram source](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/insurance-quote-registration-flow-sequence_diagram.puml))
 
+- IQController: [InsuranceQuoteController](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/main/java/com/insurance/insurancequote/controller/InsuranceQuoteController.java)
+- IQService: [InsuranceQuoteService](src/main/java/com/insurance/insurancequote/service/InsuranceQuoteServiceImpl.java)
+- IQValidator: [InsuranceQuoteValidator](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/main/java/com/insurance/insurancequote/validator/RuleCompositeValidator.java)
+- IQReceivedPub: [InsuranceQuoteReceivedPub](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/main/java/com/insurance/insurancequote/messaging/publisher/InsuranceQuoteReceivedPubImpl.java)
+
+<br/>
+
 #### Insurance Policy Creation (`PolicyMockSub` is mocking the `Insurance Policy Microservice`):
 
 ![image](https://github.com/user-attachments/assets/0d327c31-cdfa-488c-82af-b6fda0038337)
 ([diagram source](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/Insurance-policy-creation-mock-sequence_diagram.puml))
+
+- PolicyMockSub: [PolicyMockSub](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/main/java/com/insurance/insurancequote/xxx/insuransepolicyms/PolicyMockSub.java) (simulating the Insurance Policy Microservice)
+- InsurancePolicyCreationSub: [InsurancePolicyCreationSub](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/main/java/com/insurance/insurancequote/messaging/subscriber/InsurancePolicyCreationSubImpl.java)
+- InsuranceQuoteService: [InsuranceQuoteService](src/main/java/com/insurance/insurancequote/service/InsuranceQuoteServiceImpl.java)
 
 <br/>
 
@@ -276,7 +288,7 @@ I couldn't resolve it in time, but I will keep trying.
     │   │               │
     │   │               ├───controller
     │   │               │       GlobalExceptionResponseHandler.java
-    │   │               │       InsuranceQuoteController.java
+    │   │               │       InsuranceQuoteController.java                // *
     │   │               │
     │   │               ├───dto
     │   │               │   │   CustomerDTO.java
@@ -290,7 +302,7 @@ I couldn't resolve it in time, but I will keep trying.
     │   │               │
     │   │               ├───entity
     │   │               │       Customer.java
-    │   │               │       InsuranceQuote.java
+    │   │               │       InsuranceQuote.java                          // *
     │   │               │       InsuranceQuoteStatus.java
     │   │               │
     │   │               ├───exception
@@ -301,8 +313,8 @@ I couldn't resolve it in time, but I will keep trying.
     │   │               │   │   ProductService.java
     │   │               │   │
     │   │               │   ├───catalogms
-    │   │               │   │       CatalogMsOfferService.java
-    │   │               │   │       CatalogMsProductService.java
+    │   │               │   │       CatalogMsOfferService.java               // *
+    │   │               │   │       CatalogMsProductService.java             // *
     │   │               │   │
     │   │               │   └───dto
     │   │               │           MonthlyPremiumAmountDTO.java
@@ -318,22 +330,22 @@ I couldn't resolve it in time, but I will keep trying.
     │   │               │   │
     │   │               │   ├───publisher
     │   │               │   │       InsuranceQuoteReceivedPub.java
-    │   │               │   │       InsuranceQuoteReceivedPubImpl.java
+    │   │               │   │       InsuranceQuoteReceivedPubImpl.java       // *
     │   │               │   │
     │   │               │   └───subscriber
     │   │               │           InsurancePolicyCreationSub.java
-    │   │               │           InsurancePolicyCreationSubImpl.java
+    │   │               │           InsurancePolicyCreationSubImpl.java      // *
     │   │               │
     │   │               ├───repository
     │   │               │       InsuranceQuoteRepository.java
     │   │               │
     │   │               ├───service
     │   │               │       InsuranceQuoteService.java
-    │   │               │       InsuranceQuoteServiceImpl.java
+    │   │               │       InsuranceQuoteServiceImpl.java               // *
     │   │               │
     │   │               ├───validator
     │   │               │   │   InsuranceQuoteValidator.java
-    │   │               │   │   RuleCompositeValidator.java
+    │   │               │   │   RuleCompositeValidator.java                  // *
     │   │               │   │
     │   │               │   └───rule
     │   │               │           OfferActiveAndValidRuleHandler.java
@@ -345,10 +357,10 @@ I couldn't resolve it in time, but I will keep trying.
     │   │               │
     │   │               └───xxx
     │   │                   └───insuransepolicyms
-    │   │                           PolicyMockSub.java
+    │   │                           PolicyMockSub.java                       // * temporary
     │   │
     │   └───resources
-    │           application.properties
+    │           application.properties                                       // *
     │
     └───test
         ├───java
@@ -365,7 +377,7 @@ I couldn't resolve it in time, but I will keep trying.
         │               │       TestcontaionerAppConstants.java
         │               │
         │               ├───controller
-        │               │       InsuranceQuoteControllerContainerTest.java
+        │               │       InsuranceQuoteControllerContainerTest.java   // *
         │               │       InsuranceQuoteControllerTest.java
         │               │
         │               ├───dto
