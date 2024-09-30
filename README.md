@@ -24,7 +24,7 @@ It provides two endpoints: one for registering a quote and another for querying 
 1. It updates the Insurance Quote record in the database, adding the generated Insurance Policy ID;
 1. By querying the Insurance Quote via the provided endpoint (`GET /insurance-quote/{id}`), it's possible to retrieve the Insurance Quote record;
 
-![image](https://github.com/user-attachments/assets/466a1076-7c54-4d97-a880-1134a96e2dd4)
+![image](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/insurance-quote-registration-process_sequence-diagram.png)
 ([diagram source](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/insurance-quote-registration-process_sequence-diagram.puml))
 
 </details>
@@ -111,7 +111,7 @@ Some specific decisions:
 
 #### Insurance Quote Registration:
 
-![image](https://github.com/user-attachments/assets/5049e722-f7a3-4c67-ae3d-93ad3ede8a3c)
+![image](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/insurance-quote-registration-flow-sequence_diagram.png)
 ([diagram source](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/insurance-quote-registration-flow-sequence_diagram.puml))
 
 - IQController: [InsuranceQuoteController](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/main/java/com/insurance/insurancequote/controller/InsuranceQuoteController.java)
@@ -123,7 +123,7 @@ Some specific decisions:
 
 #### Insurance Policy Creation (`PolicyMockSub` is mocking the `Insurance Policy Microservice`):
 
-![image](https://github.com/user-attachments/assets/0d327c31-cdfa-488c-82af-b6fda0038337)
+![image](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/Insurance-policy-creation-mock-sequence_diagram.png)
 ([diagram source](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/Insurance-policy-creation-mock-sequence_diagram.puml))
 
 - PolicyMockSub: [PolicyMockSub](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/main/java/com/insurance/insurancequote/xxx/insuransepolicyms/PolicyMockSub.java) (simulating the Insurance Policy Microservice)
@@ -157,7 +157,7 @@ I couldn't resolve it in time, but I will keep trying.
 
 ## Rest API Endpoints descriptions
 
-### Insurance Quote Request Creation
+### 1. Insurance Quote Request Creation
 
 #### Path: `POST /insurance-quote`
 
@@ -227,7 +227,7 @@ I couldn't resolve it in time, but I will keep trying.
 
 <br/>
 
-### Insurance Quote Get by ID
+### 2. Insurance Quote Get by ID
 
 #### Path: GET /insurance-quote/{id}
 
