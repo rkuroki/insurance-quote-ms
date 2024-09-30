@@ -33,4 +33,6 @@ IQR -> IQS: Saved Quote
 
 IQS -> IQP: publish(insuranceQuoteId)
 IQP -> K: Publish message to "insurance-quote-received"
+IQS -> IQC: Created Quote
+IQC -> User: Created Quote
 @enduml
