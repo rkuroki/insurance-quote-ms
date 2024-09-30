@@ -24,7 +24,7 @@ It provides two endpoints: one for registering a quote and another for querying 
 1. It updates the Insurance Quote record in the database, adding the generated Insurance Policy ID;
 1. By querying the Insurance Quote via the provided endpoint (`GET /insurance-quote/{id}`), it's possible to retrieve the Insurance Quote record;
 
-![image](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/insurance-quote-registration-process_sequence-diagram.png)
+![image](./misc/diagrams/insurance-quote-registration-process_sequence-diagram.png)
 ([diagram source](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/insurance-quote-registration-process_sequence-diagram.puml))
 
 </details>
@@ -111,7 +111,7 @@ Some specific decisions:
 
 #### Insurance Quote Registration:
 
-![image](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/insurance-quote-registration-flow-sequence_diagram.png)
+![image](./misc/diagrams/insurance-quote-registration-flow-sequence_diagram.png)
 ([diagram source](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/insurance-quote-registration-flow-sequence_diagram.puml))
 
 - IQController: [InsuranceQuoteController](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/main/java/com/insurance/insurancequote/controller/InsuranceQuoteController.java)
@@ -123,7 +123,7 @@ Some specific decisions:
 
 #### Insurance Policy Creation (`PolicyMockSub` is mocking the `Insurance Policy Microservice`):
 
-![image](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/Insurance-policy-creation-mock-sequence_diagram.png)
+![image](./misc/diagrams/Insurance-policy-creation-mock-sequence_diagram.png)
 ([diagram source](https://github.com/rkuroki/insurance-quote-ms/tree/main/misc/diagrams/Insurance-policy-creation-mock-sequence_diagram.puml))
 
 - PolicyMockSub: [PolicyMockSub](https://github.com/rkuroki/insurance-quote-ms/blob/main/src/main/java/com/insurance/insurancequote/xxx/insuransepolicyms/PolicyMockSub.java) (simulating the Insurance Policy Microservice)
